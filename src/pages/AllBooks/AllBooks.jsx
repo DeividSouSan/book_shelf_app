@@ -6,12 +6,14 @@ import styles from "./allbooks.module.css"
 import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 
 export default function AllBooks() {
+	const baseURL = "http://127.0.0.1:5000"
+	
 	const [bookInfo, setBookInfo] = useState([])
 	const [addBook, setAddBook] = useState(false)
 	const [removeBook, setRemoveBook] = useState(false)
 
 	useEffect(() => {
-		fetch('http://127.0.0.1:5000/books')
+		fetch(`${baseURL}/books`)
 			.then(response => response.json())
 			.then(data => setBookInfo(data))
 	}, [bookInfo])

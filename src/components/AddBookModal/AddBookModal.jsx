@@ -2,7 +2,7 @@ import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./addbookmodal.module.css"
 
-export default function AddBookModal({ setModal }) {
+export default function AddBookModal({ setModal, baseURL }) {
     const [bookName, setBookName] = useState()
     const [bookAuthor, setBookAuthor] = useState()
     const [bookCover, setBookCover] = useState()
@@ -26,7 +26,7 @@ export default function AddBookModal({ setModal }) {
             body: JSON.stringify(bookData)
         }
 
-        fetch("http://127.0.0.1:5000/books", config)
+        fetch(`${baseURL}/books`, config)
 
         setModal(false)
     }
@@ -71,5 +71,6 @@ export default function AddBookModal({ setModal }) {
 }
 
 AddBookModal.propTypes = {
-    setModal: propTypes.func
+    setModal: propTypes.func,
+    baseURL: propTypes.string
 }

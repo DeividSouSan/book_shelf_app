@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
 
-export default function RemoveBookModal({ setModal, bookOptions }) {
+export default function RemoveBookModal({ setModal, bookOptions, baseURL }) {
     const [select_book, set_selected_book] = useState("")
 
     function handleCancel() {
@@ -22,27 +22,23 @@ export default function RemoveBookModal({ setModal, bookOptions }) {
             body: JSON.stringify()
         }
 
-        fetch(`http://127.0.0.1:5000/books/${select_book}`, config)
+        fetch(`${baseURL}/books/${select_book}`, config)
 
         setModal(false)
     }
 
-    async function fixIndex() {
-        const config = {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
+    const config = {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
 
-            },
-            body: JSON.stringify()
-        }
-
-        let response = await fetch('http://127.0.0.1:5000/books', config)
-        return response
+        },
+        body: JSON.stringify()
     }
     useEffect(() => {
-        fixIndex()
+        fetch(`${baseURL}/books`, config)
     }, [setModal])
+
     return (
         <div className={styles.container}>
             <div>
@@ -78,5 +74,6 @@ export default function RemoveBookModal({ setModal, bookOptions }) {
 
 RemoveBookModal.propTypes = {
     setModal: propTypes.func,
-    bookOptions: propTypes.object
+    bookOptions: propTypes.object,
+    baseURL: propTypes.str
 }
