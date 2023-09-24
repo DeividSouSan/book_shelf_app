@@ -7,7 +7,7 @@ import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 
 export default function AllBooks() {
 	const baseURL = "http://127.0.0.1:5000"
-	
+
 	const [bookInfo, setBookInfo] = useState([])
 	const [addBook, setAddBook] = useState(false)
 	const [removeBook, setRemoveBook] = useState(false)
@@ -51,11 +51,11 @@ export default function AllBooks() {
 
 			<hr />
 			{
-				addBook && <AddBookModal setModal={setAddBook} />
+				addBook && <AddBookModal setModal={setAddBook} baseURL={baseURL} />
 			}
 
 			{
-				removeBook && <RemoveBookModal setModal={setRemoveBook} bookOptions={bookInfo} />
+				removeBook && <RemoveBookModal setModal={setRemoveBook} bookOptions={bookInfo} baseURL={baseURL} />
 			}
 		</>
 	)
