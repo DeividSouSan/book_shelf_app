@@ -39,27 +39,17 @@ export default function AllBooks() {
 		remove(bookLoc)
 	}
 
-
 	useEffect(() => {
 		signInAnonymously(auth)
-			.then(() => {
-				console.log('')
-			})
-			.catch((error) => {
-				console.log('')
-			});
 
 		auth.onAuthStateChanged((user) => {
+			onValue(ref(database, `${user.uid}/books`), (snapshot) => {
+				const data = snapshot.val()
+				const dataArray = Object.entries(data)
+				setAllBooksData(dataArray)
+			})
+	
 			setUser(user.uid)
-		})
-	}, [])
-
-
-	useEffect(() => {
-		onValue(ref(database, `${user}/books`), (snapshot) => {
-			const data = snapshot.val()
-			const dataArray = Object.entries(data)
-			setAllBooksData(dataArray)
 		})
 	}, [user])
 
@@ -104,7 +94,6 @@ export default function AllBooks() {
 						removeFromDB={removeFromDB}
 						bookOptions={allBooksData} />)
 			}
-
 		</>
 	)
 }
