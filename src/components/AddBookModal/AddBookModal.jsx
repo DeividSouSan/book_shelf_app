@@ -1,38 +1,30 @@
 import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./addbookmodal.module.css"
-
-export default function AddBookModal({ setModal, baseURL }) {
-    const [bookName, setBookName] = useState()
-    const [bookAuthor, setBookAuthor] = useState()
-    const [bookCover, setBookCover] = useState()
+export default function AddBookModal({ setModal, addToDB }) {
+    
+    const [bookName, setBookName] = useState("")
+    const [bookAuthor, setBookAuthor] = useState("")
+    const [bookCover, setBookCover] = useState("")
 
     function handleDrop() {
         setModal(false)
     }
 
     function handleAdd() {
-        let bookData = {
-            "title": bookName,
-            "author": bookAuthor,
-            "cover": bookCover
-        }
-
-        const config = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(bookData)
-        }
-
-        fetch(`${baseURL}/books`, config)
-
+        const currentBook = ({
+            "bookName": bookName,
+            "bookAuthor": bookAuthor,
+            "bookCover": bookCover
+        })
+        
+        addToDB(currentBook)
         setModal(false)
     }
 
+
     return (
-        <div className={styles.container}>
+        <div className={styles.container} id={"modal"} onClick={(event) => {if (event.target.id === "modal") { setModal(false) }}}>
             <div>
                 <h1>Adicione um Livro</h1>
                 <form>
@@ -72,5 +64,5 @@ export default function AddBookModal({ setModal, baseURL }) {
 
 AddBookModal.propTypes = {
     setModal: propTypes.func,
-    baseURL: propTypes.string
+    addToDB: propTypes.func
 }
