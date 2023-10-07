@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
 
-export default function RemoveBookModal({ setModal, bookOptions, baseURL }) {
+export default function RemoveBookModal({ setModal, removeFromDB, bookOptions }) {
     const [select_book, set_selected_book] = useState("")
 
     function handleCancel() {
@@ -14,49 +14,32 @@ export default function RemoveBookModal({ setModal, bookOptions, baseURL }) {
     }
 
     function handleRemove() {
-        const config = {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify()
-        }
-
-        fetch(`${baseURL}/books/${select_book}`, config)
-
+        removeFromDB(select_book)
         setModal(false)
     }
 
-    const config = {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-
-        },
-        body: JSON.stringify()
-    }
     useEffect(() => {
-        fetch(`${baseURL}/books`, config)
-    }, [setModal])
+        console.log(select_book)
+    }, [select_book])
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} id={"modal"} onClick={(event) => { if (event.target.id === 'modal') {setModal(false)}}}>
             <div>
                 <h1>Remova um Livro</h1>
                 <form>
                     <label htmlFor="">Nome do Livro</label>
                     <select value={select_book} onChange={handleChange}>
                         <option>
-                            selecionar
+                            Selecionar Livro
                         </option>
                         {
-                            Object.values(bookOptions).map(
+                            bookOptions.map(
                                 (item, index) => (
                                     <option
-                                        value={index + 1}
+                                        value={item[0]}
                                         key={index}
                                     >
-                                        {item.title}
+                                        {item[1].bookName}
                                     </option>)
                             )
                         }
@@ -74,6 +57,6 @@ export default function RemoveBookModal({ setModal, bookOptions, baseURL }) {
 
 RemoveBookModal.propTypes = {
     setModal: propTypes.func,
-    bookOptions: propTypes.object,
-    baseURL: propTypes.str
+    removeFromDB: propTypes.func,
+    bookOptions: propTypes.array,
 }

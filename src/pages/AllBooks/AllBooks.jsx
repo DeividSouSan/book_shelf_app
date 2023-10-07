@@ -1,22 +1,67 @@
 import { useEffect, useState } from "react"
 import Card from "../../components/Card/Card"
 import AddBookModal from "../../components/AddBookModal/AddBookModal"
-import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
-import styles from "./allbooks.module.css"
 import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
+import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
+import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+
+import styles from "./allbooks.module.css"
 
 export default function AllBooks() {
-	const baseURL = "http://127.0.0.1:5000"
+	const firebaseConfig = {
+		apiKey: "AIzaSyBIAZbw_SMnAsIFdkrhEDoKtXImvYAwvNo",
+		databaseURL: "https://my-book-shelf-454d0-default-rtdb.firebaseio.com/"
+	}
 
-	const [bookInfo, setBookInfo] = useState([])
+	const app = initializeApp(firebaseConfig)
+	const database = getDatabase(app)
+
+	const [user, setUser] = useState("")
+
+	const books = ref(database, `${user}/books`)
+	const auth = getAuth();
+
+
 	const [addBook, setAddBook] = useState(false)
 	const [removeBook, setRemoveBook] = useState(false)
 
+	const [allBooksData, setAllBooksData] = useState([]);
+
+	function addToDB(currentBookInfo) {
+		push(books, currentBookInfo)
+	}
+
+	function removeFromDB(bookId) {
+		const bookLoc = ref(database, `${user}/books/${bookId}`)
+		remove(bookLoc)
+	}
+
+
 	useEffect(() => {
-		fetch(`${baseURL}/books`)
-			.then(response => response.json())
-			.then(data => setBookInfo(data))
-	}, [bookInfo])
+		signInAnonymously(auth)
+			.then(() => {
+				console.log('')
+			})
+			.catch((error) => {
+				console.log('')
+			});
+
+		auth.onAuthStateChanged((user) => {
+			setUser(user.uid)
+		})
+	}, [])
+
+
+	useEffect(() => {
+		onValue(ref(database, `${user}/books`), (snapshot) => {
+			const data = snapshot.val()
+			const dataArray = Object.entries(data)
+			setAllBooksData(dataArray)
+		})
+	}, [user])
 
 	return (
 		<>
@@ -35,28 +80,31 @@ export default function AllBooks() {
 				</button>
 			</div>
 			<hr />
+			<span>USER ID: {user}</span>
 			<div className={styles.bookWrap}>
 				{
-					Object.values(bookInfo).map(
-						(item, index) => (<Card
+					allBooksData.map((book, index) => (
+						<Card
 							key={index}
-							coverURL={item.cover}
-							title={item.title}
-							id={item.id}
-						/>
-						)
-					)
+							coverURL={book[1].bookCover}
+							title={book[1].bookName}
+						/>))
 				}
 			</div>
 
 			<hr />
 			{
-				addBook && <AddBookModal setModal={setAddBook} baseURL={baseURL} />
+				addBook && <AddBookModal setModal={setAddBook} addToDB={addToDB} />
 			}
 
 			{
-				removeBook && <RemoveBookModal setModal={setRemoveBook} bookOptions={bookInfo} baseURL={baseURL} />
+				removeBook && (
+					<RemoveBookModal
+						setModal={setRemoveBook}
+						removeFromDB={removeFromDB}
+						bookOptions={allBooksData} />)
 			}
+
 		</>
 	)
 }
