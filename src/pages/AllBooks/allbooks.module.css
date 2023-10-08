@@ -1,14 +1,10 @@
-.bookWrap {
+header {
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
 
-    margin: 2rem auto;
-    padding: 2rem;
-    max-width: 60%;
-
-    gap: 2rem;
+    padding: 1rem;
 }
 
 .pageTitle {
@@ -22,9 +18,11 @@
 .btnWrap {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    align-items: center;
+    margin-left: auto;
     gap: 0 2rem;
-    width: 100%;
+
+    width: fit-content;
 
     >button {
         display: flex;
@@ -35,8 +33,6 @@
         padding: 0.5rem 1rem;
         border: none;
         border-radius: 50em;
-
-        margin-bottom: 1rem;
 
         background-color: white;
 
@@ -50,3 +46,20 @@
         cursor: pointer;
     }
 }
+
+.bookWrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    margin: 2rem auto;
+    padding: 2rem;
+
+    max-width: 60%;
+
+    background-color: white;
+    border-radius: 0.5rem;
+}
+

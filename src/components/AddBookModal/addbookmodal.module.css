@@ -16,12 +16,14 @@
         translate: -50% -50%;
 
         width: 40%;
+
         padding: 2rem;
-        border: 1px solid black;
+        border-radius: 1rem;
+
         background-color: beige;
         color: black;
 
-        box-shadow: 0 0 100px 1px rgba(255, 255, 255, 0.571);
+        box-shadow: 0 0 100px 1px rgba(255, 255, 255, 0.269);
 
         z-index: 1;
     }
@@ -29,7 +31,6 @@
     & form {
         display: flex;
         flex-direction: column;
-
 
         >label {
             font-size: calc(var(--fsize) + 0.5rem);
@@ -52,19 +53,18 @@
 
             >button {
                 background-color: rgb(216, 216, 216);
+                border: 1px solid black;
+
                 font-size: calc(var(--fsize) + 0.25rem);
                 font-weight: 700;
 
                 outline: none;
-                padding: 1rem;
-                border: none;
-                border-radius: 50rem;
+                padding: 0.5rem 1rem;
 
                 width: 40%;
             }
 
             >button:hover {
-                outline: 1px solid black;
                 filter: brightness(0.7);
                 cursor: pointer;
             }
