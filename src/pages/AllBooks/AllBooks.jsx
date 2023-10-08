@@ -48,41 +48,45 @@ export default function AllBooks() {
 				const dataArray = Object.entries(data)
 				setAllBooksData(dataArray)
 			})
-	
+
 			setUser(user.uid)
 		})
 	}, [user])
 
 	return (
 		<>
-			<h1 className={styles.pageTitle}>Estante de Livros</h1>
-			<div className={styles.btnWrap}>
-				<button
-					onClick={() => setAddBook(!addBook)}
-				>
-					<BsFillPlusSquareFill />Adicionar
-				</button>
+			<header>
+				<h1 className={styles.pageTitle}>Estante de Livros</h1>
+				<div className={styles.btnWrap}>
+					<button
+						onClick={() => setAddBook(!addBook)}
+					>
+						<BsFillPlusSquareFill />Adicionar
+					</button>
 
-				<button
-					onClick={() => setRemoveBook(!removeBook)}
-				>
-					<BsXSquareFill />Remover
-				</button>
-			</div>
+					<button
+						onClick={() => setRemoveBook(!removeBook)}
+					>
+						<BsXSquareFill />Remover
+					</button>
+				</div>
+			</header>
+
 			<hr />
+
 			<span>USER ID: {user}</span>
 			<div className={styles.bookWrap}>
 				{
 					allBooksData.map((book, index) => (
 						<Card
 							key={index}
-							coverURL={book[1].bookCover}
-							title={book[1].bookName}
+							bookData={book[1]}
 						/>))
 				}
 			</div>
 
 			<hr />
+			
 			{
 				addBook && <AddBookModal setModal={setAddBook} addToDB={addToDB} />
 			}

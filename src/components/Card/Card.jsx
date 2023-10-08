@@ -1,19 +1,79 @@
 import propTypes from 'prop-types'
-
+import ContentEditable from 'react-contenteditable';
 import styles from './card.module.css'
+import { useEffect, useState } from 'react'
 
-export default function Card({ coverURL, title}) {
-    return (
-        <div className={styles.bookContainer}>
-            <div className={styles.bannerContainer}>
-                <img src={coverURL} alt="" />
+export default function Card({ coverURL, bookData }) {
+    const [color, setColor] = useState('');
+    const [selected, setSelected] = useState(true)
+
+    function toggleCard() {
+        setSelected(!selected)
+    }
+
+    function baseCard() {
+        return (
+            <div className={styles.bookContainer} onDoubleClick={toggleCard}>
+                <h1>{bookData.title}</h1>
+                <div className={styles.infoWrap}>
+                    <span>
+                        <ContentEditable
+                            html='0'
+                            tagName='p' // Use a custom HTML tag (uses a div by default)
+                            className={styles.pageCount}
+                        />
+
+                        /{bookData.pages}
+                    </span>
+                    <span style={{ backgroundColor: color }} className={styles.status}>
+                        {bookData.status}
+                    </span>
+                </div>
+
+            </div >
+        )
+    }
+
+    function expandedCard() {
+        return (
+            <div className={styles.bookContainer} onDoubleClick={toggleCard}>
+                <div>
+                    <img src={coverURL} alt="" className={styles.bannerContainer} />
+                </div>
+                <h1>{title}</h1>
+                {currentPage}/{pages}
+                <span style={{ backgroundColor: color }} className={styles.forme}>
+                    {status}
+                </span>
             </div>
-            <p>{title}</p>
-        </div>
+        )
+    }
+
+    useEffect(() => {
+        switch (bookData.status) {
+            case 'Start':
+                setColor('#E50D4E');
+                break
+            case 'Reading':
+                setColor('#6098D1');
+                break
+            case 'Finished':
+                setColor('#648B56');
+                break
+        }
+    }, [bookData.status])
+
+    return (
+        <>
+            {
+                selected ? baseCard() : expandedCard()
+            }
+        </>
+
     )
 }
 
 Card.propTypes = {
     coverURL: propTypes.string,
-    title: propTypes.string,
+    bookData: propTypes.object
 }
