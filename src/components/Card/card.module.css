@@ -2,7 +2,7 @@
     animation: fade-in 1s ease-in;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
 
@@ -17,7 +17,6 @@
     box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.375);
 
     >h1 {
-        font-family: "Poppins";
         font-size: 1.25rem;
         font-weight: 300;
         letter-spacing: 1px;
@@ -57,6 +56,13 @@
                 outline: none;
             }
         }
+    }
+}
+
+@media (min-width: 768px) {
+    .bookContainer {
+        flex-direction: row;
+
     }
 }
 
