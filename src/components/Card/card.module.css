@@ -24,10 +24,15 @@
     >.infoWrap {
         display: flex;
         gap: 1rem;
-
-        & .pageCount {
-            display: inline;
-            width: fit-content;
+        
+        >.pageCountElement {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            
+            & .pageCount {
+                width: fit-content;
+            }
         }
 
         & .pageCount:focus {

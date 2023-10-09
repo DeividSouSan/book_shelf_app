@@ -1,11 +1,19 @@
 import propTypes from 'prop-types'
 import ContentEditable from 'react-contenteditable';
 import styles from './card.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function Card({ coverURL, bookData }) {
     const [color, setColor] = useState('');
     const [selected, setSelected] = useState(true)
+    const text = useRef('')
+
+    function handlePress(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            return false;
+        }
+    }
 
     function toggleCard() {
         setSelected(!selected)
@@ -16,11 +24,12 @@ export default function Card({ coverURL, bookData }) {
             <div className={styles.bookContainer} onDoubleClick={toggleCard}>
                 <h1>{bookData.title}</h1>
                 <div className={styles.infoWrap}>
-                    <span>
+                    <span className={styles.pageCountElement}>
                         <ContentEditable
-                            html='0'
+                            html={text.current}
                             tagName='p' // Use a custom HTML tag (uses a div by default)
                             className={styles.pageCount}
+                            onKeyDown={(e) => handlePress(e)}
                         />
 
                         /{bookData.pages}
