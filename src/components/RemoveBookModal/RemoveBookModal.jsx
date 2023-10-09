@@ -19,7 +19,7 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
     }
 
     useEffect(() => {
-        console.log(select_book)
+        console.log(bookOptions)
     }, [select_book])
 
     return (
@@ -39,7 +39,7 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
                                         value={item[0]}
                                         key={index}
                                     >
-                                        {item[1].bookName}
+                                        {item[1].title}
                                     </option>)
                             )
                         }
