@@ -19,7 +19,6 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
     }
 
     useEffect(() => {
-        console.log(bookOptions)
     }, [select_book])
 
     return (
@@ -27,25 +26,27 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
             <div>
                 <h1>Remova um Livro</h1>
                 <form>
-                    <label htmlFor="">Nome do Livro</label>
-                    <select value={select_book} onChange={handleChange}>
-                        <option>
-                            Selecionar Livro
-                        </option>
-                        {
-                            bookOptions.map(
-                                (item, index) => (
-                                    <option
-                                        value={item[0]}
-                                        key={index}
-                                    >
-                                        {item[1].title}
-                                    </option>)
-                            )
-                        }
-                    </select>
-
                     <div>
+                        <label htmlFor="">Nome do Livro</label>
+                        <select value={select_book} onChange={handleChange}>
+                            <option>
+                                Selecionar Livro
+                            </option>
+                            {
+                                bookOptions.map(
+                                    (item, index) => (
+                                        <option
+                                            value={item[0]}
+                                            key={index}
+                                        >
+                                            {item[1].title}
+                                        </option>)
+                                )
+                            }
+                        </select>
+                    </div>
+
+                    <div className={styles.buttonWrap}>
                         <button type="button" onClick={handleRemove}>REMOVER</button>
                         <button type="button" onClick={handleCancel}>CANCELAR</button>
                     </div>
