@@ -3,16 +3,18 @@
 
     display: flex;
     flex-direction: row;
-
     align-items: center;
     justify-content: space-between;
 
     width: auto;
     padding: 0.5rem 1rem;
-    border: 1px solid black;
+    border: 2px solid rgb(76, 76, 76);
+    border-radius: 50rem;
 
     background-color: white;
     color: black;
+
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.375);
 
     >h1 {
         font-family: "Poppins";
@@ -41,9 +43,19 @@
         }
 
         >.status {
-            padding: 0 1rem;
-            border-radius: 1rem;
             margin-left: auto;
+            
+            & select {
+                padding: 0 1rem;
+                border-radius: 1rem;
+                font-size: 1rem;
+                appearance: none;
+                text-align: center;
+            }
+
+            & select:focus {
+                outline: none;
+            }
         }
     }
 }
@@ -59,12 +71,9 @@
 
 }
 
-.bannerContainer {
-    width: 100%;
-
+.coverWrap {
+    display: flex;
     >img {
         width: 100%;
-        box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.51);
-        border-radius: 0.5rem;
     }
 }

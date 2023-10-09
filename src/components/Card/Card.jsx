@@ -3,10 +3,10 @@ import ContentEditable from 'react-contenteditable';
 import styles from './card.module.css'
 import { useEffect, useState, useRef } from 'react'
 
-export default function Card({ coverURL, bookData }) {
+export default function Card({ bookData }) {
     const [color, setColor] = useState('');
     const [selected, setSelected] = useState(true)
-    const text = useRef('')
+    const text = useRef(bookData.currentPage)
 
     function handlePress(e) {
         if (e.key === "Enter") {
@@ -34,8 +34,12 @@ export default function Card({ coverURL, bookData }) {
 
                         /{bookData.pages}
                     </span>
-                    <span style={{ backgroundColor: color }} className={styles.status}>
-                        {bookData.status}
+                    <span className={styles.status}>
+                        <select name="" id="" style={{ backgroundColor: color }}>
+                            <option value="">Terminado</option>
+                            <option value="">Lendo</option>
+                            <option value="">Começar</option>
+                        </select>
                     </span>
                 </div>
 
@@ -46,15 +50,15 @@ export default function Card({ coverURL, bookData }) {
     function expandedCard() {
         return (
             <div className={styles.bookContainer} onDoubleClick={toggleCard}>
-                <div>
-                    <img src={coverURL} alt="" className={styles.bannerContainer} />
+                <div className={styles.coverWrap} >
+                    <img src={bookData.cover} alt="" />
                 </div>
-                <h1>{title}</h1>
-                {currentPage}/{pages}
-                <span style={{ backgroundColor: color }} className={styles.forme}>
-                    {status}
+                <h1>{bookData.title}</h1>
+                {bookData.currentPage} /{bookData.pages}
+                <span span style={{ backgroundColor: color }} className={styles.forme} >
+                    {bookData.status}
                 </span>
-            </div>
+            </div >
         )
     }
 
@@ -83,6 +87,5 @@ export default function Card({ coverURL, bookData }) {
 }
 
 Card.propTypes = {
-    coverURL: propTypes.string,
     bookData: propTypes.object
 }
