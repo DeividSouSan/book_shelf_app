@@ -45,13 +45,20 @@ export default function AllBooks() {
 		auth.onAuthStateChanged((user) => {
 			onValue(ref(database, `${user.uid}/books`), (snapshot) => {
 				const data = snapshot.val()
-				const dataArray = Object.entries(data)
+				let dataArray;
+				if (data) {
+					dataArray = Object.entries(data)
+				} else {
+					dataArray = "";
+				}
 				setAllBooksData(dataArray)
 			})
 
 			setUser(user.uid)
 		})
 	}, [user])
+
+	useEffect(() => {console.log(allBooksData)}, [])
 
 	return (
 		<>
@@ -72,20 +79,16 @@ export default function AllBooks() {
 				</div>
 			</header>
 
-			<hr />
-
 			<span>USER ID: {user}</span>
 			<div className={styles.bookWrap}>
 				{
-					allBooksData.map((book, index) => (
+					allBooksData ? allBooksData.map((book, index) => (
 						<Card
 							key={index}
 							bookData={book[1]}
-						/>))
+						/>)) : <p>Não há livros</p>
 				}
 			</div>
-
-			<hr />
 			
 			{
 				addBook && <AddBookModal setModal={setAddBook} addToDB={addToDB} />
