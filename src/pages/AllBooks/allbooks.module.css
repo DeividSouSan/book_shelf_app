@@ -52,7 +52,7 @@ header {
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 1rem;
 
     margin: 2rem auto;
     padding: 2rem;
