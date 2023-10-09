@@ -6,8 +6,8 @@ import { useEffect, useState, useRef } from 'react'
 export default function Card({ bookData }) {
     const [color, setColor] = useState('');
     const [selected, setSelected] = useState(true)
-    const text = useRef(bookData.currentPage)
-
+    const currentPage = useRef("0")
+    const bookTitle = useRef(bookData.title)
     function handlePress(e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -22,12 +22,17 @@ export default function Card({ bookData }) {
     function baseCard() {
         return (
             <div className={styles.bookContainer} onDoubleClick={toggleCard}>
-                <h1>{bookData.title}</h1>
+                <ContentEditable
+                            html={bookTitle.current}
+                            tagName='h1'
+                            className={styles.pageCount}
+                            onKeyDown={(e) => handlePress(e)}
+                        />
                 <div className={styles.infoWrap}>
                     <span className={styles.pageCountElement}>
                         <ContentEditable
-                            html={text.current}
-                            tagName='p' // Use a custom HTML tag (uses a div by default)
+                            html={currentPage.current}
+                            tagName='p'
                             className={styles.pageCount}
                             onKeyDown={(e) => handlePress(e)}
                         />
