@@ -5,7 +5,7 @@ import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
-import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+import { getDatabase, ref, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 
 import styles from "./allbooks.module.css"
@@ -21,9 +21,7 @@ export default function AllBooks() {
 
 	const [user, setUser] = useState("")
 
-	const books = ref(database, `${user}/books`)
 	const auth = getAuth();
-
 
 	const [addBook, setAddBook] = useState(false)
 	const [removeBook, setRemoveBook] = useState(false)
@@ -31,12 +29,20 @@ export default function AllBooks() {
 	const [allBooksData, setAllBooksData] = useState([]);
 
 	function addToDB(currentBookInfo) {
+		const books = ref(database, `${user}/books`)
+
 		push(books, currentBookInfo)
 	}
 
 	function removeFromDB(bookId) {
 		const bookLoc = ref(database, `${user}/books/${bookId}`)
 		remove(bookLoc)
+	}
+
+	function updateDB(bookID, updateInfo) {
+		const currentBookRef = ref(database, `${user}/books/${bookID}`)
+		const updates = {...updateInfo}
+		update(currentBookRef, updates)
 	}
 
 	useEffect(() => {
@@ -58,7 +64,7 @@ export default function AllBooks() {
 		})
 	}, [user])
 
-	useEffect(() => {console.log(allBooksData)}, [])
+	useEffect(() => { console.log(allBooksData) }, [])
 
 	return (
 		<>
@@ -79,17 +85,18 @@ export default function AllBooks() {
 				</div>
 			</header>
 
-			<span>USER ID: {user}</span>
 			<div className={styles.bookWrap}>
 				{
 					allBooksData ? allBooksData.map((book, index) => (
 						<Card
 							key={index}
+							bookID={book[0]}
 							bookData={book[1]}
+							updateDB={updateDB}
 						/>)) : <p>Não há livros</p>
 				}
 			</div>
-			
+
 			{
 				addBook && <AddBookModal setModal={setAddBook} addToDB={addToDB} />
 			}
@@ -101,6 +108,7 @@ export default function AllBooks() {
 						removeFromDB={removeFromDB}
 						bookOptions={allBooksData} />)
 			}
+			<span>USER ID: {user}</span>
 		</>
 	)
 }
