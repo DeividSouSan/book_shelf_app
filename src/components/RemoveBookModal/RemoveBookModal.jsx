@@ -2,33 +2,25 @@ import { useEffect, useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
 
-export default function RemoveBookModal({ setModal, removeFromDB, bookOptions }) {
-    const [select_book, set_selected_book] = useState("")
-
-    function handleCancel() {
-        setModal(false)
-    }
-
-    function handleChange(event) {
-        set_selected_book(event.target.value)
-    }
+export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOptions }) {
+    const [selectedBook, setSelectedBook] = useState("")
 
     function handleRemove() {
-        removeFromDB(select_book)
-        setModal(false)
+        removeFromDB(selectedBook)
+        setModalStatus(false)
     }
 
     useEffect(() => {
-    }, [select_book])
+    }, [selectedBook])
 
     return (
-        <div className={styles.container} id={"modal"} onClick={(event) => { if (event.target.id === 'modal') {setModal(false)}}}>
+        <div className={styles.container} id={"modal"} onClick={(event) => { if (event.target.id === 'modal') { setModalStatus(false) } }}>
             <div>
                 <h1>Remova um Livro</h1>
                 <form>
                     <div>
                         <label htmlFor="">Nome do Livro</label>
-                        <select value={select_book} onChange={handleChange}>
+                        <select value={selectedBook} onChange={(e) => setSelectedBook(event.target.value)}>
                             <option>
                                 Selecionar Livro
                             </option>
@@ -48,7 +40,7 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
 
                     <div className={styles.buttonWrap}>
                         <button type="button" onClick={handleRemove}>REMOVER</button>
-                        <button type="button" onClick={handleCancel}>CANCELAR</button>
+                        <button type="button" onClick={() => setModalStatus(false)}>CANCELAR</button>
                     </div>
                 </form>
             </div>
@@ -57,7 +49,7 @@ export default function RemoveBookModal({ setModal, removeFromDB, bookOptions })
 }
 
 RemoveBookModal.propTypes = {
-    setModal: propTypes.func,
+    setModalStatus: propTypes.func,
     removeFromDB: propTypes.func,
     bookOptions: propTypes.array,
 }

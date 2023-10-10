@@ -10,28 +10,24 @@ export default function Card({ bookID, bookData, updateDB }) {
     const [change, setChange] = useState(false);
 
     const currentPage = useRef(bookData.currentPage);
-    const bookTitle = useRef(bookData.title);
+    const title = useRef(bookData.title);
 
-    function handlePress(e) {
+    function stopLineBreak(e) {
         if (e.key === "Enter") {
             e.preventDefault();
             return false;
         }
     }
 
-    function handleChange(target, value) {
-        target.current = value;
-
-    }
-
     function handleBlur() {
         let newBookData = {
             ...bookData,
-            title: bookTitle.current,
+            title: title.current,
             currentPage: currentPage.current
         }
 
         updateDB(bookID, newBookData)
+        setChange(true)
     }
 
     function toggleCard() {
@@ -43,11 +39,11 @@ export default function Card({ bookID, bookData, updateDB }) {
             <>
                 <div className={styles.bookContainer} onDoubleClick={toggleCard}>
                     <ContentEditable
-                        html={bookTitle.current}
+                        html={title.current}
                         tagName='h1'
                         className={styles.pageCount}
-                        onKeyDown={(e) => handlePress(e)}
-                        onChange={(e) => handleChange(bookTitle, e.target.value)}
+                        onKeyDown={(e) => stopLineBreak(e)}
+                        onChange={(e) => title.current = e.target.value}
                         onBlur={handleBlur}
                     />
                     <div className={styles.infoWrap}>
@@ -56,12 +52,10 @@ export default function Card({ bookID, bookData, updateDB }) {
                                 html={currentPage.current}
                                 tagName='p'
                                 className={styles.pageCount}
-                                onKeyDown={(e) => handlePress(e)}
-                                onChange={(e) => handleChange(currentPage, e.target.value)}
+                                onKeyDown={(e) => stopLineBreak(e)}
+                                onChange={(e) => currentPage.current = e.target.value}
                                 onBlur={handleBlur}
-                            />
-
-                            /{bookData.pages}
+                            />/{bookData.pages}
                         </span>
                         <span className={styles.status}>
                             <select name="" id="" style={{ backgroundColor: color }}>
@@ -71,7 +65,7 @@ export default function Card({ bookID, bookData, updateDB }) {
                             </select>
                         </span>
                     </div>
-                </div >
+                </div>
                 <div>
                     {
                         change && <p>Houve alteração</p>

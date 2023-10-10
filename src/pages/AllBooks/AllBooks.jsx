@@ -1,51 +1,46 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Card from "../../components/Card/Card"
 import AddBookModal from "../../components/AddBookModal/AddBookModal"
 import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
+import styles from "./allbooks.module.css"
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 
-import styles from "./allbooks.module.css"
+import { firebaseConfig } from "../../../controller/FirebaseConfig.js"
 
 export default function AllBooks() {
-	const firebaseConfig = {
-		apiKey: "AIzaSyBIAZbw_SMnAsIFdkrhEDoKtXImvYAwvNo",
-		databaseURL: "https://my-book-shelf-454d0-default-rtdb.firebaseio.com/"
-	}
-
 	const app = initializeApp(firebaseConfig)
 	const database = getDatabase(app)
 
-	const [user, setUser] = useState("")
+	const [user, setUser] = useState()
 
-	const auth = getAuth();
+	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
+	const [removeBookModalStatus, setRemoveBookModalStatus] = useState(false)
 
-	const [addBook, setAddBook] = useState(false)
-	const [removeBook, setRemoveBook] = useState(false)
+	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState([]);
 
-	const [allBooksData, setAllBooksData] = useState([]);
-
-	function addToDB(currentBookInfo) {
+	function addToDB(newBookInfo) {
 		const books = ref(database, `${user}/books`)
-
-		push(books, currentBookInfo)
+		push(books, newBookInfo)
 	}
 
-	function removeFromDB(bookId) {
-		const bookLoc = ref(database, `${user}/books/${bookId}`)
-		remove(bookLoc)
+	function removeFromDB(bookID) {
+		const bookPosition = ref(database, `${user}/books/${bookID}`)
+		remove(bookPosition)
 	}
 
 	function updateDB(bookID, updateInfo) {
-		const currentBookRef = ref(database, `${user}/books/${bookID}`)
-		const updates = {...updateInfo}
-		update(currentBookRef, updates)
+		const bookPosition = ref(database, `${user}/books/${bookID}`)
+		const updates = { ...updateInfo }
+		update(bookPosition, updates)
 	}
 
 	useEffect(() => {
+		const auth = getAuth();
+
 		signInAnonymously(auth)
 
 		auth.onAuthStateChanged((user) => {
@@ -53,18 +48,16 @@ export default function AllBooks() {
 				const data = snapshot.val()
 				let dataArray;
 				if (data) {
-					dataArray = Object.entries(data)
+					dataArray = Object.entries(data) /* [[id], [properties]] */
 				} else {
 					dataArray = "";
 				}
-				setAllBooksData(dataArray)
+				setAllBooksFromCurrentUser(dataArray)
 			})
 
 			setUser(user.uid)
 		})
 	}, [user])
-
-	useEffect(() => { console.log(allBooksData) }, [])
 
 	return (
 		<>
@@ -72,13 +65,13 @@ export default function AllBooks() {
 				<h1 className={styles.pageTitle}>Estante de Livros</h1>
 				<div className={styles.btnWrap}>
 					<button
-						onClick={() => setAddBook(!addBook)}
+						onClick={() => setAddBookModalStatus(!addBookModalStatus)}
 					>
 						<BsFillPlusSquareFill />Adicionar
 					</button>
 
 					<button
-						onClick={() => setRemoveBook(!removeBook)}
+						onClick={() => setRemoveBookModalStatus(!removeBookModalStatus)}
 					>
 						<BsXSquareFill />Remover
 					</button>
@@ -87,28 +80,29 @@ export default function AllBooks() {
 
 			<div className={styles.bookWrap}>
 				{
-					allBooksData ? allBooksData.map((book, index) => (
+					allBooksFromCurrentUser ? allBooksFromCurrentUser.map((book, index) => (
 						<Card
 							key={index}
-							bookID={book[0]}
-							bookData={book[1]}
+							bookID={book[0]} /* [id] */
+							bookData={book[1]} /* [properties] */
 							updateDB={updateDB}
 						/>)) : <p>Não há livros</p>
 				}
 			</div>
 
 			{
-				addBook && <AddBookModal setModal={setAddBook} addToDB={addToDB} />
+				addBookModalStatus && <AddBookModal
+					setModalStatus={setAddBookModalStatus}
+					addToDB={addToDB} />
 			}
 
 			{
-				removeBook && (
+				removeBookModalStatus && (
 					<RemoveBookModal
-						setModal={setRemoveBook}
+						setModalStatus={setRemoveBookModalStatus}
 						removeFromDB={removeFromDB}
-						bookOptions={allBooksData} />)
+						bookOptions={allBooksFromCurrentUser} />)
 			}
-			<span>USER ID: {user}</span>
 		</>
 	)
 }
