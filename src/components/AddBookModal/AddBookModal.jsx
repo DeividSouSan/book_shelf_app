@@ -19,6 +19,7 @@ export default function AddBookModal({ setModal, addToDB }) {
 			"author": author,
 			"cover": cover,
 			"pages": pages,
+			"currentPage": "0",
 			"status": status,
 		})
 
