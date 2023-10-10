@@ -18,14 +18,10 @@ export default function AllBooks() {
 
 	const app = initializeApp(firebaseConfig)
 	const database = getDatabase(app)
-
 	const [user, setUser] = useState("")
-
 	const auth = getAuth();
-
 	const [addBook, setAddBook] = useState(false)
 	const [removeBook, setRemoveBook] = useState(false)
-
 	const [allBooksData, setAllBooksData] = useState([]);
 
 	function addToDB(currentBookInfo) {
@@ -35,14 +31,14 @@ export default function AllBooks() {
 	}
 
 	function removeFromDB(bookId) {
-		const bookLoc = ref(database, `${user}/books/${bookId}`)
-		remove(bookLoc)
+		const bookPosition = ref(database, `${user}/books/${bookId}`)
+		remove(bookPosition)
 	}
 
 	function updateDB(bookID, updateInfo) {
-		const currentBookRef = ref(database, `${user}/books/${bookID}`)
+		const currentBookPosition = ref(database, `${user}/books/${bookID}`)
 		const updates = {...updateInfo}
-		update(currentBookRef, updates)
+		update(currentBookPosition, updates)
 	}
 
 	useEffect(() => {
