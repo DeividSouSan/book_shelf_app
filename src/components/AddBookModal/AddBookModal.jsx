@@ -1,26 +1,30 @@
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import propTypes from 'prop-types'
 import styles from "./addbookmodal.module.css"
 export default function AddBookModal({ setModalStatus, addToDB }) {
-	const title = useRef("")
-	const author = useRef("")
-	const cover = useRef("")
-	const pages = useRef("")
-	const status = useRef("")
+	const titleInputRef = useRef(null)
+
+	const bookData = useRef({
+		"title": "",
+		"author": "",
+		"cover": "",
+		"pages": "",
+		"currentPage": "0",
+		"status": ""
+	})
 
 	function handleAdd() {
 		const currentBook = ({
-			"title": title.current,
-			"author": author.current,
-			"cover": cover.current,
-			"pages": pages.current,
-			"currentPage": "0",
-			"status": status.current,
+			...bookData.current
 		})
 
 		addToDB(currentBook)
 		setModalStatus(false)
 	}
+
+	useEffect(() => {
+		titleInputRef.current.focus();
+	}, [])
 
 	return (
 		<div
@@ -32,10 +36,11 @@ export default function AddBookModal({ setModalStatus, addToDB }) {
 				<h1>Adicionar Livro</h1>
 				<form>
 					<div>
-						<label htmlFor="">Titulo</label>
+						<label htmlFor="" >Titulo</label>
 						<input
 							type="text"
-							onChange={(e) => { title.current = e.target.value }}
+							onChange={(e) => { bookData.current.title = e.target.value }}
+							ref={titleInputRef}
 						/>
 					</div>
 
@@ -43,7 +48,7 @@ export default function AddBookModal({ setModalStatus, addToDB }) {
 						<label htmlFor="">Autor</label>
 						<input
 							type="text"
-							onChange={(e) => { author.current = e.target.value }}
+							onChange={(e) => { bookData.current.author = e.target.value }}
 						/>
 					</div>
 
@@ -51,7 +56,7 @@ export default function AddBookModal({ setModalStatus, addToDB }) {
 						<label htmlFor="">Capa URL</label>
 						<input
 							type="text"
-							onChange={(e) => { cover.current = e.target.value }}
+							onChange={(e) => { bookData.current.cover = e.target.value }}
 						/>
 					</div>
 
@@ -60,13 +65,13 @@ export default function AddBookModal({ setModalStatus, addToDB }) {
 						<input
 							type="number"
 							min={0}
-							onChange={(e) => { pages.current = e.target.value }}
+							onChange={(e) => { bookData.current.pages = e.target.value }}
 						/>
 					</div>
 
 					<div>
 						<label htmlFor="">Status de Leitura</label>
-						<select name="" id="" onChange={(e) => { status.current = e.target.value }}>
+						<select name="" id="" onChange={(e) => { bookData.current.status = e.target.value }}>
 							<option value="" defaultValue>Selecione</option>
 							<option value="Start">Começar</option>
 							<option value="Reading">Lendo</option>
