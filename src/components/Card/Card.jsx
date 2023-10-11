@@ -104,6 +104,10 @@ export default function Card({ bookID, bookData, updateDB }) {
         }
     }, [bookData.status])
 
+    useEffect(() => {
+        console.log(bookData)
+    })
+
     return (
         <>
             {
