@@ -11,21 +11,25 @@ export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOpti
     }
 
     useEffect(() => {
+        console.log(selectedBook)
     }, [selectedBook])
 
     return (
-        <div className={styles.container} id={"modal"} onClick={(event) => { if (event.target.id === 'modal') { setModalStatus(false) } }}>
+        <div
+            className={styles.container}
+            id={"modal"}
+            onClick={(e) => { if (e.target.id === 'modal') setModalStatus(false) }}>
             <div>
                 <h1>Remova um Livro</h1>
                 <form>
                     <div>
                         <label htmlFor="">Nome do Livro</label>
-                        <select value={selectedBook} onChange={(e) => setSelectedBook(event.target.value)}>
+                        <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
                             <option>
                                 Selecionar Livro
                             </option>
                             {
-                                bookOptions.map(
+                                Object.entries(bookOptions).map(
                                     (item, index) => (
                                         <option
                                             value={item[0]}
@@ -51,5 +55,5 @@ export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOpti
 RemoveBookModal.propTypes = {
     setModalStatus: propTypes.func,
     removeFromDB: propTypes.func,
-    bookOptions: propTypes.array,
+    bookOptions: propTypes.object,
 }
