@@ -14,8 +14,10 @@ import { firebaseConfig } from "../../../controller/FirebaseConfig.js"
 export default function AllBooks() {
 	const app = initializeApp(firebaseConfig)
 	const database = getDatabase(app)
+	const auth = getAuth();
+	signInAnonymously(auth)
 
-	const [user, setUser] = useState()
+	const [user, setUser] = useState("")
 
 	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
 	const [removeBookModalStatus, setRemoveBookModalStatus] = useState(false)
@@ -39,26 +41,15 @@ export default function AllBooks() {
 	}
 
 	useEffect(() => {
-		const auth = getAuth();
+		auth.onAuthStateChanged((user) => { setUser(user.uid) })
+	}, [auth])
 
-		signInAnonymously(auth)
-
-		auth.onAuthStateChanged((user) => {
-			onValue(ref(database, `${user.uid}/books`), (snapshot) => {
-				const data = snapshot.val()
-				let dataArray;
-				if (data) {
-					dataArray = Object.entries(data) /* [[id], [properties]] */
-				} else {
-					dataArray = "";
-				}
-				setAllBooksFromCurrentUser(dataArray)
-			})
-
-			setUser(user.uid)
-		})
-	}, [user])
-
+	useEffect(() => {
+		onValue(ref(database, `${user}/books`), (snapshot) => {
+			if (snapshot) {
+				setAllBooksFromCurrentUser(Object.entries(snapshot.val()))
+			}
+		})}, [])
 	return (
 		<>
 			<header>
@@ -77,12 +68,12 @@ export default function AllBooks() {
 					</button>
 				</div>
 			</header>
-
+			<p>{user}</p>
 			<div className={styles.bookWrap}>
 				{
-					allBooksFromCurrentUser ? allBooksFromCurrentUser.map((book, index) => (
+					allBooksFromCurrentUser ? allBooksFromCurrentUser.map((book) => (
 						<Card
-							key={index}
+							key={book[0]}
 							bookID={book[0]} /* [id] */
 							bookData={book[1]} /* [properties] */
 							updateDB={updateDB}
