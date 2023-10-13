@@ -5,7 +5,7 @@ import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
 import styles from "./allbooks.module.css"
 
-import {authenticate, addToDB, removeFromDB, updateDB} from '../../../controller/FirebaseControl.js';
+import { authenticate, listener, addToDB, removeFromDB, updateDB, readFromDB } from '../../../controller/FirebaseControl.js';
 
 export default function AllBooks() {
 	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
@@ -17,7 +17,13 @@ export default function AllBooks() {
 		authenticate().then((data) => {
 			setAllBooksFromCurrentUser(data)
 		})
-	}, [addBookModalStatus, removeBookModalStatus])
+	}, [])
+
+	useEffect(() => {
+		listener();
+	},[]);
+
+
 
 	return (
 		<>
@@ -42,6 +48,7 @@ export default function AllBooks() {
 							bookData={book[1]} /* [properties] */
 							updateDB={updateDB}
 						/>)) : <p>Não há livros</p>
+
 				}
 			</div>
 
@@ -53,9 +60,9 @@ export default function AllBooks() {
 
 			{
 				removeBookModalStatus && <RemoveBookModal
-						setModalStatus={setRemoveBookModalStatus}
-						removeFromDB={removeFromDB}
-						bookOptions={allBooksFromCurrentUser} />
+					setModalStatus={setRemoveBookModalStatus}
+					removeFromDB={removeFromDB}
+					bookOptions={allBooksFromCurrentUser} />
 			}
 		</>
 	)

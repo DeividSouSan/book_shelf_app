@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
-import { getDatabase, ref, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+import { getDatabase, ref, push, onValue, remove, update, get } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 
 
@@ -27,7 +27,7 @@ export async function authenticate() {
                 ref(database, `${AuthenticatedUserID}/books`),
                 (snapshot) => {
                     AuthenticatedUserBooksData = snapshot.val();
-                    resolve(AuthenticatedUserBooksData)
+                    resolve(AuthenticatedUserBooksData) // ['id', [properties]]
                 }
             );
             unsubscribe(); // Para evitar vazamentos de memória
@@ -35,6 +35,18 @@ export async function authenticate() {
     });
 
     return AuthenticatedUserBooksData;
+}
+
+export function readFromDB() {
+    get(ref(database, `${AuthenticatedUserID}/books`)).then((snapshot) => {
+        console.log(AuthenticatedUserID)
+    })
+}
+
+export function listener() {
+    return onValue(
+        ref(database, `${AuthenticatedUserID}/books`),
+        (snapshot) => console.log('O listener rodou'));
 }
 
 export function addToDB(newBookInfo) {

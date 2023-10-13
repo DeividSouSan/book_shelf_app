@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
 
@@ -9,10 +9,6 @@ export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOpti
         removeFromDB(selectedBook)
         setModalStatus(false)
     }
-
-    useEffect(() => {
-        console.log(selectedBook)
-    }, [selectedBook])
 
     return (
         <div
