@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import Card from "../../components/Card/Card"
 import AddBookModal from "../../components/AddBookModal/AddBookModal"
 import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
 import styles from "./allbooks.module.css"
 
-import { authenticate, listener, addToDB, removeFromDB, updateDB, readFromDB } from '../../../controller/FirebaseControl.js';
+import { authenticate, readFromDB } from '../../../controller/FirebaseControl.js';
 
 export default function AllBooks() {
 	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
@@ -20,10 +20,8 @@ export default function AllBooks() {
 	}, [])
 
 	useEffect(() => {
-		listener();
-	},[]);
-
-
+		readFromDB().then(data => setAllBooksFromCurrentUser(data))
+	}, [addBookModalStatus, removeBookModalStatus]);
 
 	return (
 		<>
@@ -41,29 +39,30 @@ export default function AllBooks() {
 
 			<div className={styles.bookWrap}>
 				{
-					allBooksFromCurrentUser ? Object.entries(allBooksFromCurrentUser).map((book, index) => (
+					allBooksFromCurrentUser ? Object.entries(allBooksFromCurrentUser).map((book) => (
 						<Card
-							key={index}
+							key={book[0]}
 							bookID={book[0]} /* [id] */
 							bookData={book[1]} /* [properties] */
-							updateDB={updateDB}
 						/>)) : <p>Não há livros</p>
 
 				}
 			</div>
 
-			{
-				addBookModalStatus && <AddBookModal
-					setModalStatus={setAddBookModalStatus}
-					addToDB={addToDB} />
-			}
+			<div>
+				{
+					addBookModalStatus && <AddBookModal
+						setModalStatus={setAddBookModalStatus}/>
+				}
+			</div>
 
-			{
-				removeBookModalStatus && <RemoveBookModal
-					setModalStatus={setRemoveBookModalStatus}
-					removeFromDB={removeFromDB}
-					bookOptions={allBooksFromCurrentUser} />
-			}
+			<div>
+				{
+					removeBookModalStatus && <RemoveBookModal
+						setModalStatus={setRemoveBookModalStatus}
+						bookOptions={allBooksFromCurrentUser} />
+				}
+			</div>
 		</>
 	)
 }
