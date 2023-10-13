@@ -37,16 +37,20 @@ export async function authenticate() {
     return AuthenticatedUserBooksData;
 }
 
-export function readFromDB() {
-    get(ref(database, `${AuthenticatedUserID}/books`)).then((snapshot) => {
-        console.log(AuthenticatedUserID)
-    })
-}
+export async function readFromDB() {
+    let currentData;
+    await new Promise((resolve) => {
+        const unsubscribe = onValue(
+                ref(database, `${AuthenticatedUserID}/books`),
+                (snapshot) => {
+                    currentData = snapshot.val();
+                    resolve(currentData) // ['id', [properties]]
+                }
+            );
+            unsubscribe(); // Para evitar vazamentos de memória
+        });
 
-export function listener() {
-    return onValue(
-        ref(database, `${AuthenticatedUserID}/books`),
-        (snapshot) => console.log('O listener rodou'));
+    return currentData;
 }
 
 export function addToDB(newBookInfo) {
