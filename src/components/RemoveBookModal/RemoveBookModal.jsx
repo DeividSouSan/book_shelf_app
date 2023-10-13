@@ -1,8 +1,8 @@
 import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
-
-export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOptions }) {
+import { removeFromDB } from '../../../controller/FirebaseControl.js';
+export default function RemoveBookModal({ setModalStatus, bookOptions }) {
     const [selectedBook, setSelectedBook] = useState("")
 
     function handleRemove() {
@@ -25,7 +25,7 @@ export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOpti
                                 Selecionar Livro
                             </option>
                             {
-                                Object.entries(bookOptions).map(
+                                bookOptions && Object.entries(bookOptions).map(
                                     (item, index) => (
                                         <option
                                             value={item[0]}
