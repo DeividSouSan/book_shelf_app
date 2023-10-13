@@ -2,9 +2,9 @@ import propTypes from 'prop-types'
 import ContentEditable from 'react-contenteditable';
 import styles from './card.module.css'
 import { useEffect, useState, useRef } from 'react'
+import { updateDB } from '../../../controller/FirebaseControl.js';
 
-
-export default function Card({ bookID, bookData, updateDB }) {
+export default function Card({ bookID, bookData }) {
     const [color, setColor] = useState('');
     const [selected, setSelected] = useState(true);
     const [change, setChange] = useState(false);
