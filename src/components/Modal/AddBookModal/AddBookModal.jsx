@@ -1,8 +1,7 @@
 import { useRef, useEffect } from "react"
 import propTypes from 'prop-types'
 import styles from "./addbookmodal.module.css"
-import { addToDB } from '../../../controller/FirebaseControl.js';
-
+import { addToDB } from '../../../../controller/FirebaseControl.js';
 export default function AddBookModal({ setModalStatus }) {
 	const titleInputRef = useRef(null)
 
@@ -80,6 +79,7 @@ export default function AddBookModal({ setModalStatus }) {
 							<option value="Finished">Terminado</option>
 						</select>
 					</div>
+					
 
 					<div className={styles.buttonWrap}>
 						<button type="button" onClick={handleAdd}>ADICIONAR</button>
