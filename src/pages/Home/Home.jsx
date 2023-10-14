@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
-import Card from "../../components/Card/Card"
-import AddBookModal from "../../components/AddBookModal/AddBookModal"
-import RemoveBookModal from "../../components/RemoveBookModal/RemoveBookModal"
+import Card from "../../components/Card/ShortCard/Card"
+
+import AddBookModal from "../../components/Modal/AddBookModal/AddBookModal"
+import RemoveBookModal from "../../components/Modal/RemoveBookModal/RemoveBookModal"
+
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
-import styles from "./allbooks.module.css"
+import styles from "./home.module.css"
 
 import { authenticate, readFromDB } from '../../../controller/FirebaseControl.js';
 
-export default function AllBooks() {
+export default function Home() {
 	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
 
 	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
