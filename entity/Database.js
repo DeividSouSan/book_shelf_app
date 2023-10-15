@@ -1,51 +1,55 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
-import { getDatabase, ref, push, onValue, remove, update, get } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+import { getDatabase, ref, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 
 export class Database {
     constructor(config) {
         this.app = initializeApp(config)
         this.database = getDatabase(this.app)
-        this.user = null; // Inicialize user como null
+        this.auth = getAuth(this.app)
+        this.user = null
 
-        const auth = getAuth()
-        signInAnonymously(auth);
-
-        this.authPromise = new Promise((resolve) => {
-            const unsubscribe = onAuthStateChanged(auth, (user) => {
+        signInAnonymously(this.auth);
+        this.authPromisse = new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(this.auth, (user) => {
                 if (user) {
-                    this.user = user.uid;
+                    this.user = user.uid
+                    resolve(this.user)
                     unsubscribe(); // Pare de observar mudanças após a autenticação ser bem-sucedida
-                    resolve();
                 }
-            })
-        });
-    }
-
-    async getUser() {
-        await this.authPromise;
-        return this.user
-    }
-
-    async readFromDB() {
-        await this.getUser()
-
-        return new Promise((resolve) => {
-            onValue(ref(this.database, `${this.user}/books`), (snapshot) => {
-                resolve(snapshot.val())
             })
         })
     }
 
-    addToDB(newBookInfo) {
-        push(ref(this.database, `${this.user}/books`), newBookInfo)
+    async getUser() {
+        return await this.authPromisse;
     }
 
-    removeFromDB(bookID) {
-        remove(ref(this.database, `${this.user}/books/${bookID}`))
+    async readFromDB() {
+        const user = await this.getUser()
+        return new Promise((resolve) => {
+            onValue(ref(this.database, `${user}/books`), (snapshot) => {
+                if (snapshot) {
+                    resolve(snapshot.val())
+                } else {
+                    console.log('Não há dados.')
+                }
+            })
+        })
     }
 
-    updateDB(bookID, updateInfo) {
-        update(ref(this.database, `${this.user}/books/${bookID}`), { ...updateInfo })
+    async addToDB(newBookInfo) {
+        const user = await this.getUser()
+        push(ref(this.database, `${user}/books`), newBookInfo)
+    }
+
+    async removeFromDB(bookID) {
+        const user = await this.getUser()
+        remove(ref(this.database, `${user}/books/${bookID}`))
+    }
+
+    async updateDB(bookID, updateInfo) {
+        const user = await this.getUser()
+        update(ref(this.database, `${user}/books/${bookID}`), { ...updateInfo })
     }
 }
