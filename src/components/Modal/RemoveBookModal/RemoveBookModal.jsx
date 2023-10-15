@@ -1,12 +1,14 @@
 import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
-import { removeFromDB } from '../../../../controller/FirebaseControl.js';
+import { Database } from '../../../../entity/Database';
+import { FirebaseConfig } from '../../../../controller/FirebaseConfig';
 export default function RemoveBookModal({ setModalStatus, bookOptions }) {
     const [selectedBook, setSelectedBook] = useState("")
 
     function handleRemove() {
-        removeFromDB(selectedBook)
+        const database = Database(FirebaseConfig)
+        database.removeFromDB(selectedBook)
         setModalStatus(false)
     }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import Card from "../../components/Card/ShortCard/Card"
 
 import AddBookModal from "../../components/Modal/AddBookModal/AddBookModal"
@@ -7,7 +7,8 @@ import RemoveBookModal from "../../components/Modal/RemoveBookModal/RemoveBookMo
 import { BsXSquareFill, BsFillPlusSquareFill } from 'react-icons/bs'
 import styles from "./home.module.css"
 
-import { authenticate, readFromDB } from '../../../controller/FirebaseControl.js';
+import { Database } from "../../../entity/Database.js"
+import { FirebaseConfig } from "../../../controller/FirebaseConfig.js"
 
 export default function Home() {
 	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
@@ -15,26 +16,25 @@ export default function Home() {
 	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
 	const [removeBookModalStatus, setRemoveBookModalStatus] = useState(false)
 
-	useEffect(() => {
-		authenticate().then((data) => {
-			setAllBooksFromCurrentUser(data)
-		})
-	}, [])
+	const database = new Database(FirebaseConfig)
+
 
 	useEffect(() => {
-		readFromDB().then(data => setAllBooksFromCurrentUser(data))
-	}, [addBookModalStatus, removeBookModalStatus]);
+		database.readFromDB().then(data => setAllBooksFromCurrentUser(data))
+		console.log('algo aconteceu')
+	}, []);
 
 	const OpenAddModal = () => setAddBookModalStatus(!addBookModalStatus)
 	const OpenRemoveModal = () => setRemoveBookModalStatus(!removeBookModalStatus)
+
 	return (
 		<>
 			<header>
 				<h1 className={styles.pageTitle}>Estante de Livros</h1>
 				<div className={styles.btnWrap}>
-					{addBookModalStatus && <AddBookModal setModalStatus={setAddBookModalStatus}/>}
+					{addBookModalStatus && <AddBookModal setModalStatus={setAddBookModalStatus} />}
 					<button onClick={OpenAddModal}><BsFillPlusSquareFill />Adicionar</button>
-					{removeBookModalStatus && <RemoveBookModal setModalStatus={setRemoveBookModalStatus}/>}
+					{removeBookModalStatus && <RemoveBookModal setModalStatus={setRemoveBookModalStatus} />}
 					<button onClick={OpenRemoveModal}><BsXSquareFill />Remover</button>
 				</div>
 			</header>

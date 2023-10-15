@@ -1,7 +1,8 @@
 import { useRef, useEffect } from "react"
 import propTypes from 'prop-types'
 import styles from "./addbookmodal.module.css"
-import { addToDB } from '../../../../controller/FirebaseControl.js';
+import { Database } from '../../../../entity/Database';
+import { FirebaseConfig } from "../../../../controller/FirebaseConfig";
 export default function AddBookModal({ setModalStatus }) {
 	const titleInputRef = useRef(null)
 
@@ -19,7 +20,9 @@ export default function AddBookModal({ setModalStatus }) {
 			...bookData.current
 		})
 
-		addToDB(currentBook)
+		const database = Database(FirebaseConfig)
+        database.addToDB(currentBook)
+		
 		setModalStatus(false)
 	}
 
