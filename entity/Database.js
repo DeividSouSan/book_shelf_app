@@ -25,46 +25,27 @@ export class Database {
     async getUser() {
         await this.authPromise;
         return this.user
-
     }
 
-    /* 
-    Eu preciso que durante a criação da instância já seja definido quem é o this.user. Dessa maneira eu posso chamar qualquer função create, read, update, delete sem me preocupar em ter que conhecer o ID do usuáriio e sem que isso fique de alguma forma trafegando dentro dos meus componentes. Porém, eu não consigo fazer com que isso seja definido durante a criação.
-    */
     async readFromDB() {
         await this.getUser()
 
-        let currentData;
-
-        onValue(ref(this.database, `${this.user}/books`), (snapshot) => {
-            if (snapshot) {
-                console.log('data exists')
-                currentData = snapshot.val()
-            } else {
-                console.log('data dont exists')
-            }
-
+        return new Promise((resolve) => {
+            onValue(ref(this.database, `${this.user}/books`), (snapshot) => {
+                resolve(snapshot.val())
+            })
         })
-
-        return currentData
     }
 
     addToDB(newBookInfo) {
-        const books = ref(this.database, `${this.user}/books`)
-        push(books, newBookInfo)
+        push(ref(this.database, `${this.user}/books`), newBookInfo)
     }
 
     removeFromDB(bookID) {
-        const bookPosition = ref(this.database, `${this.user}/books/${bookID}`)
-        remove(bookPosition)
+        remove(ref(this.database, `${this.user}/books/${bookID}`))
     }
 
     updateDB(bookID, updateInfo) {
-        const bookPosition = ref(this.database, `${this.user}/books/${bookID}`)
-        const updates = { ...updateInfo }
-        update(bookPosition, updates)
+        update(ref(this.database, `${this.user}/books/${bookID}`), { ...updateInfo })
     }
-
-
-
 }
