@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from "react"
-import Card from "../../components/Card/ShortCard/Card"
+import { useEffect, useRef, useState } from "react"
 
+import Card from "../../components/Card/ShortCard/Card"
 import AddBookModal from "../../components/Modal/AddBookModal/AddBookModal"
 import RemoveBookModal from "../../components/Modal/RemoveBookModal/RemoveBookModal"
 
@@ -12,22 +12,22 @@ import { FirebaseConfig } from "../../../controller/FirebaseConfig.js"
 
 export default function Home() {
 	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
+	const [gotData, setGotData] = useState(false)
+
 
 	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
 	const [removeBookModalStatus, setRemoveBookModalStatus] = useState(false)
 
 	const database = new Database(FirebaseConfig)
 
-
-	useEffect(() => {
-		database.readFromDB().then(data => setAllBooksFromCurrentUser(data))
-		console.log('algo aconteceu')
-	}, []);
-
 	const OpenAddModal = () => setAddBookModalStatus(!addBookModalStatus)
 	const OpenRemoveModal = () => setRemoveBookModalStatus(!removeBookModalStatus)
 
-	return (
+	useEffect(() => {
+		database.readFromDB().then(data => setAllBooksFromCurrentUser(data))
+	}, [])
+
+	return ( 
 		<>
 			<header>
 				<h1 className={styles.pageTitle}>Estante de Livros</h1>
