@@ -2,9 +2,9 @@ import propTypes from 'prop-types'
 import ContentEditable from 'react-contenteditable';
 import styles from './card.module.css'
 import { useEffect, useState, useRef } from 'react'
+import { updateDB } from '../../../../controller/FirebaseControl.js';
 
-
-export default function Card({ bookID, bookData, updateDB }) {
+export default function Card({ bookID, bookData }) {
     const [color, setColor] = useState('');
     const [selected, setSelected] = useState(true);
     const [change, setChange] = useState(false);
@@ -78,14 +78,12 @@ export default function Card({ bookID, bookData, updateDB }) {
     function expandedCard() {
         return (
             <div className={styles.bookContainer} onDoubleClick={toggleCard}>
-                <div className={styles.coverWrap} >
-                    <img src={bookData.cover} alt="" />
+                <div>
+                    <img src={bookData.cover}/>
                 </div>
-                <h1>{bookData.title}</h1>
-                {bookData.currentPage} /{bookData.pages}
-                <span span style={{ backgroundColor: color }} className={styles.forme} >
-                    {bookData.status}
-                </span>
+                <div>
+                    dados livro
+                </div>
             </div >
         )
     }

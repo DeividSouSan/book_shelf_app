@@ -1,0 +1,94 @@
+.bookContainer {
+    /* animation: fade-in 1s ease-in; */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 95%;
+    padding: 0.5rem 0.25remx;
+    margin: 0.25rem;
+
+    border: 2px solid rgb(76, 76, 76);
+    border-radius: 1rem;
+
+    background-color: white;
+    color: black;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.142);
+
+    text-align: center;
+
+    >h1 {
+        font-size: 1.25rem;
+        font-weight: 300;
+        outline: none;
+
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    >.infoWrap {
+        display: flex;
+        gap: 1rem;
+
+        >.pageCountElement {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+
+            & .pageCount {
+                width: fit-content;
+            }
+        }
+
+        & .pageCount:focus {
+            border: none;
+            outline: none;
+        }
+
+        >.status {
+            margin-left: auto;
+
+            & select {
+                color: white;
+                padding: 0 1rem;
+                border-radius: 1rem;
+                font-size: 1rem;
+                appearance: none;
+                text-align: center;
+            }
+
+            & select:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .bookContainer {
+        flex-direction: row;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+.coverWrap {
+    display: flex;
+
+    >img {
+        width: 100%;
+    }
+}

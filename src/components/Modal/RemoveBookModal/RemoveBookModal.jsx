@@ -1,31 +1,33 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import propTypes from 'prop-types'
 import styles from "./removebookmodal.module.css"
-
-export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOptions }) {
+import { Database } from '../../../../entity/Database';
+import { FirebaseConfig } from '../../../../controller/FirebaseConfig';
+export default function RemoveBookModal({ setModalStatus, bookOptions }) {
     const [selectedBook, setSelectedBook] = useState("")
 
     function handleRemove() {
-        removeFromDB(selectedBook)
+        const database = Database(FirebaseConfig)
+        database.removeFromDB(selectedBook)
         setModalStatus(false)
     }
 
-    useEffect(() => {
-    }, [selectedBook])
-
     return (
-        <div className={styles.container} id={"modal"} onClick={(event) => { if (event.target.id === 'modal') { setModalStatus(false) } }}>
+        <div
+            className={styles.container}
+            id={"modal"}
+            onClick={(e) => { if (e.target.id === 'modal') setModalStatus(false) }}>
             <div>
                 <h1>Remova um Livro</h1>
                 <form>
                     <div>
                         <label htmlFor="">Nome do Livro</label>
-                        <select value={selectedBook} onChange={(e) => setSelectedBook(event.target.value)}>
+                        <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
                             <option>
                                 Selecionar Livro
                             </option>
                             {
-                                bookOptions.map(
+                                bookOptions && Object.entries(bookOptions).map(
                                     (item, index) => (
                                         <option
                                             value={item[0]}
@@ -51,5 +53,5 @@ export default function RemoveBookModal({ setModalStatus, removeFromDB, bookOpti
 RemoveBookModal.propTypes = {
     setModalStatus: propTypes.func,
     removeFromDB: propTypes.func,
-    bookOptions: propTypes.array,
+    bookOptions: propTypes.object,
 }
