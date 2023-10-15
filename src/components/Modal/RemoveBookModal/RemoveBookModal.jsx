@@ -1,16 +1,24 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import propTypes from 'prop-types'
-import styles from "./removebookmodal.module.css"
+
 import { Database } from '../../../../entity/Database';
 import { FirebaseConfig } from '../../../../controller/FirebaseConfig';
-export default function RemoveBookModal({ setModalStatus, bookOptions }) {
+
+import styles from "./removebookmodal.module.css"
+export default function RemoveBookModal({ setModalStatus }) {
+    const [bookOptions, setBookOptions] = useState(null)
     const [selectedBook, setSelectedBook] = useState("")
 
+    const database = new Database(FirebaseConfig)
+
     function handleRemove() {
-        const database = Database(FirebaseConfig)
         database.removeFromDB(selectedBook)
         setModalStatus(false)
     }
+
+    useEffect(() => {
+        database.readFromDB().then(data => setBookOptions(data))
+    }, [])
 
     return (
         <div
@@ -23,16 +31,11 @@ export default function RemoveBookModal({ setModalStatus, bookOptions }) {
                     <div>
                         <label htmlFor="">Nome do Livro</label>
                         <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
-                            <option>
-                                Selecionar Livro
-                            </option>
+                            <option>Selecionar Livro</option>
                             {
                                 bookOptions && Object.entries(bookOptions).map(
                                     (item, index) => (
-                                        <option
-                                            value={item[0]}
-                                            key={index}
-                                        >
+                                        <option value={item[0]} key={index}>
                                             {item[1].title}
                                         </option>)
                                 )

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import Card from "../../components/Card/ShortCard/Card"
 import AddBookModal from "../../components/Modal/AddBookModal/AddBookModal"
@@ -11,23 +11,21 @@ import { Database } from "../../../entity/Database.js"
 import { FirebaseConfig } from "../../../controller/FirebaseConfig.js"
 
 export default function Home() {
-	const [allBooksFromCurrentUser, setAllBooksFromCurrentUser] = useState();
-	const [gotData, setGotData] = useState(false)
+	const database = new Database(FirebaseConfig)
 
+	const [booksFromUser, setBooksFromUser] = useState();
 
 	const [addBookModalStatus, setAddBookModalStatus] = useState(false)
 	const [removeBookModalStatus, setRemoveBookModalStatus] = useState(false)
-
-	const database = new Database(FirebaseConfig)
 
 	const OpenAddModal = () => setAddBookModalStatus(!addBookModalStatus)
 	const OpenRemoveModal = () => setRemoveBookModalStatus(!removeBookModalStatus)
 
 	useEffect(() => {
-		database.readFromDB().then(data => setAllBooksFromCurrentUser(data))
-	}, [])
+		database.readFromDB().then(data => setBooksFromUser(data))
+	}, [addBookModalStatus, removeBookModalStatus])
 
-	return ( 
+	return (
 		<>
 			<header>
 				<h1 className={styles.pageTitle}>Estante de Livros</h1>
@@ -41,7 +39,7 @@ export default function Home() {
 
 			<div className={styles.bookWrap}>
 				{
-					allBooksFromCurrentUser ? Object.entries(allBooksFromCurrentUser).map((book) => (
+					booksFromUser ? Object.entries(booksFromUser).map((book) => (
 						<Card
 							key={book[0]}
 							bookID={book[0]} /* [id] */
