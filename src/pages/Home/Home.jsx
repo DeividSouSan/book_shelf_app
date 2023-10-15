@@ -25,17 +25,17 @@ export default function Home() {
 		readFromDB().then(data => setAllBooksFromCurrentUser(data))
 	}, [addBookModalStatus, removeBookModalStatus]);
 
+	const OpenAddModal = () => setAddBookModalStatus(!addBookModalStatus)
+	const OpenRemoveModal = () => setRemoveBookModalStatus(!removeBookModalStatus)
 	return (
 		<>
 			<header>
 				<h1 className={styles.pageTitle}>Estante de Livros</h1>
 				<div className={styles.btnWrap}>
-					<button onClick={() => setAddBookModalStatus(!addBookModalStatus)}>
-						<BsFillPlusSquareFill />Adicionar
-					</button>
-					<button onClick={() => setRemoveBookModalStatus(!removeBookModalStatus)}>
-						<BsXSquareFill />Remover
-					</button>
+					{addBookModalStatus && <AddBookModal setModalStatus={setAddBookModalStatus}/>}
+					<button onClick={OpenAddModal}><BsFillPlusSquareFill />Adicionar</button>
+					{removeBookModalStatus && <RemoveBookModal setModalStatus={setRemoveBookModalStatus}/>}
+					<button onClick={OpenRemoveModal}><BsXSquareFill />Remover</button>
 				</div>
 			</header>
 
@@ -48,21 +48,6 @@ export default function Home() {
 							bookData={book[1]} /* [properties] */
 						/>)) : <p>Não há livros</p>
 
-				}
-			</div>
-
-			<div>
-				{
-					addBookModalStatus && <AddBookModal
-						setModalStatus={setAddBookModalStatus}/>
-				}
-			</div>
-
-			<div>
-				{
-					removeBookModalStatus && <RemoveBookModal
-						setModalStatus={setRemoveBookModalStatus}
-						bookOptions={allBooksFromCurrentUser} />
 				}
 			</div>
 		</>
