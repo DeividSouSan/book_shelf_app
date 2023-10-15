@@ -1,9 +1,13 @@
+import { useEffect, useState, useRef } from 'react'
 import propTypes from 'prop-types'
+
 import ContentEditable from 'react-contenteditable';
+
+import { Database } from '../../../../entity/Database';
+import { FirebaseConfig } from '../../../../controller/FirebaseConfig';
+
 import styles from './card.module.css'
 import selectedStyle from './selected_card.module.css'
-import { useEffect, useState, useRef } from 'react'
-import { updateDB } from '../../../../controller/FirebaseControl.js';
 
 export default function Card({ bookID, bookData }) {
     const [color, setColor] = useState('');
@@ -25,8 +29,9 @@ export default function Card({ bookID, bookData }) {
             title: title.current,
             currentPage: currentPage.current
         }
-
-        updateDB(bookID, newBookData)
+        
+        const database = Database(FirebaseConfig)
+        database.updateDB(newBookData)
     }
 
     function toggleCard() {
