@@ -79,9 +79,9 @@ export default function AddBookModal({ setModalStatus }) {
 						<label htmlFor="">Status de Leitura</label>
 						<select name="" id="" onChange={(e) => { bookData.current.status = e.target.value }}>
 							<option value="" defaultValue>Selecione</option>
-							<option value="Start">Começar</option>
-							<option value="Reading">Lendo</option>
-							<option value="Finished">Terminado</option>
+							<option value="start">Começar</option>
+							<option value="reading">Lendo</option>
+							<option value="finished">Terminado</option>
 						</select>
 					</div>
 					
