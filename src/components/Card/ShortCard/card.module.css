@@ -7,7 +7,7 @@
     justify-content: space-between;
 
     width: 95%;
-    padding: 0.5rem 0.25remx;
+    padding: 0.25rem 0.25rem;
     margin: 0.25rem;
 
     border: 2px solid rgb(76, 76, 76);
@@ -55,15 +55,21 @@
             & select {
                 color: white;
                 padding: 0 1rem;
-                border-radius: 1rem;
+                border-radius: 0.25rem;
                 font-size: 1rem;
                 appearance: none;
                 text-align: center;
             }
 
+            & select option:hover {
+                background-color: #ffcc00;
+                /* Substitua pelo código de cor desejado */
+            }
+
             & select:focus {
                 outline: none;
             }
+
         }
     }
 }
